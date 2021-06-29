@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <script src="socket.io.js"></script>
+    <script>
+      const socket = io("http://localhost:4010");
+      let lastClientId;
+      socket.on("connect", () => {
+        lastClientId = socket.id;
+        console.log("Websocket Connected!", socket.id);
+      });
+
+      socket.on("command-finished", (data) => {
+        console.log("command-finished", data);
+      });
+
+      socket.on("disconnect", function () {
+        console.log("Websocket Disconnected");
+      });
+
+      // Get machine status
+      const onGetMachineStatus = () => {
+        socket.emit("command", {
+          licenseId: "12345678",
+          origin: lastClientId,
+          type: "get-machine-status",
+        });
+      };
+
+      // Get machine status
+      const onActivateReceiveRecords = () => {
+        socket.emit("command", {
+          licenseId: "12345678",
+          origin: lastClientId,
+          type: "activate-receive-records",
+        });
+      };
+      
+    </script>
+  </head>
+  <body>
+    <p>
+      <button type="button" onclick="onGetMachineStatus()">
+        Status do Equipamento
+      </button>
+    </p>
+    <p>
+      <button type="button" onclick="onActivateReceiveRecords()">
+        Ativar Recebimento de Marcações
+      </button>
+    </p>
+  </body>
+</html>
